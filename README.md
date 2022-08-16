@@ -21,6 +21,16 @@ mvn install
     <version>0.0.1-SNAPSHOT</version>
 </dependency>
 ```
+#####  在配置文件中配置sls的配置信息
+
+```properties
+# sls的 endpoint示例
+sls.ibatis.endpoint=cn-beijing.log.aliyuncs.com
+# sls.ibatis.endpoint=cn-hangzhou.log.aliyuncs.com
+# sls的 ak/sk
+sls.ibatis.accessKeyId=xxxxxx
+sls.ibatis.accessKeySecret=xxxxxx
+```
 
 ##### 启动类上配置 mapper 扫描
 
@@ -102,11 +112,46 @@ import java.util.List;
 public interface UserMapper {
 
     @SlsSelect("* | select userId, name from log ")
+    @SlsTable(project = "dms-app", logStore = "dms-app-prod")
     List<User> select(@SlsFrom int from, @SlsTo int to);
 
     @SlsSelect("* | select userId, name from log where userId=#{userId} ")
+    @SlsTable(project = "dms-app", logStore = "dms-app-prod")
     User getUserById(@SlsParam("userId") String userId, @SlsFrom int from, @SlsTo int to);
 
+}
+
+```
+
+
+##### 在 Service中使用
+
+```java
+
+import com.biubiu.sls.mapper.User;
+import com.biubiu.sls.mapper.UserMapper;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.Date;
+
+@Service
+public class UserService {
+
+    @Resource
+    private UserMapper userMapper;
+
+    public void testSelect() {
+        int start = new Date("2022-08-16 00:00:00").getTime() / 1000;
+        int end = new Date("2022-08-17 00:00:00").getTime() / 1000;
+
+        // 批量查询 示例
+        List<User> list = userMapper.select(start, end);
+
+        // 单条查询 示例
+        User user = userMapper.getUserById("105281", start, end);
+        
+    }
 }
 
 ```

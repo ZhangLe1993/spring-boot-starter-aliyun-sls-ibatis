@@ -15,9 +15,11 @@ import java.util.List;
 public interface UserMapper {
 
     @SlsSelect("*|select userId, name from user ")
+    @SlsTable(project = "dms-app", logStore = "dms-app-prod")
     List<User> select(@SlsFrom int from, @SlsTo int to);
 
     @SlsSelect("*|select userId, name from user where userId=#{userId} ")
+    @SlsTable(project = "dms-app", logStore = "dms-app-prod")
     User getUserById(@SlsParam("userId") String userId, @SlsFrom int from, @SlsTo int to);
 
 }

@@ -15,18 +15,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class Configration {
 
-    @Value("${sls.xxx.endpoint}")
+    @Value("${sls.ibatis.endpoint}")
     private String endpoint;
 
-    @Value("${sls.xxx.project}")
-    private String project;
+    @Value("${sls.ibatis.accessKeyId}")
+    private String accessKeyId;
 
-    @Value("${sls.xxx.logStore}")
-    private String logStore;
+    @Value("${sls.ibatis.accessKeySecret}")
+    private String accessKeySecret;
 
     @Bean(name="slsClient")
     public Client slsClient() {
-        return new Client(endpoint, project, logStore);
+        return new Client(endpoint, accessKeyId, accessKeySecret);
     }
 
 
