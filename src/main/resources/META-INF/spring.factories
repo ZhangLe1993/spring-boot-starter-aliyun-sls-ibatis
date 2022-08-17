@@ -1,2 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.biubiu.AliyunSlsInitiator
+  com.biubiu.AliyunSlsInitiator,\
+  com.biubiu.sls.Configration,\
+  com.biubiu.SpringContextUtil
