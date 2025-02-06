@@ -20,7 +20,7 @@
         <spring.boot.version>2.1.2.RELEASE</spring.boot.version>
 
         <guava.version>29.0-jre</guava.version>
-        <fastjson.version>1.2.68</fastjson.version>
+        <fastjson.version>1.2.74</fastjson.version>
         <!-- -->
         <aliyun-log.version>0.6.60</aliyun-log.version>
         <!-- commons 版本 -->
@@ -64,6 +64,7 @@
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
         </dependency>
+
 
         <!--  -->
         <dependency>

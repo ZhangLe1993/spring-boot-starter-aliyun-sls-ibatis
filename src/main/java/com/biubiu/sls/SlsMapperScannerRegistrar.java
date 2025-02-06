@@ -85,7 +85,7 @@ public class SlsMapperScannerRegistrar implements ImportBeanDefinitionRegistrar,
         ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
         // 这里特别注意一下，类路径必须这样写
         // 获取指定package下的所有类
-        Resource[] resources = resourcePatternResolver.getResources("classpath*:/" + pkg.replace(".", File.separator) + File.separator);
+        Resource[] resources = resourcePatternResolver.getResources("classpath*:/" + pkg.replace(".", File.separator) + File.separator + "*.class");
 
         MetadataReaderFactory metadata = new SimpleMetadataReaderFactory();
         for(Resource resource : resources) {

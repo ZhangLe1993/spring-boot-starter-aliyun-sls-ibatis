@@ -21,6 +21,14 @@ public class SlsMapperFactoryBean<T> implements FactoryBean<T> {
         this.mapperInterface = mapperInterface;
     }
 
+    public Class<T> getMapperInterface() {
+        return mapperInterface;
+    }
+
+    public void setMapperInterface(Class<T> mapperInterface) {
+        this.mapperInterface = mapperInterface;
+    }
+
     @Override
     public T getObject() throws Exception {
         return MapperProxy.getMapper(this.mapperInterface);

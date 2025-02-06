@@ -9,6 +9,8 @@ import com.aliyun.openservices.log.response.GetLogsResponse;
 import com.biubiu.SpringContextUtil;
 import com.biubiu.sls.annotation.*;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
  * @version:
  */
 public class MapperInvocationHandler implements InvocationHandler {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(MapperInvocationHandler.class);
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -49,7 +53,7 @@ public class MapperInvocationHandler implements InvocationHandler {
         ConcurrentHashMap<String, Object> actualParamsMap = getActualParamsMap(method, args);
         // 将sql语句里#占位符里的参数替换成实际 value
         String newSQL = questionMark(hql, actualParamsMap);
-        System.out.println("newSQL=" + newSQL);
+        LOGGER.info("Aliyun Sls Execute SQL={}" , newSQL);
 
         // 使用反射获取方法返回值类型
         Class<?> returnType = method.getReturnType();
@@ -69,9 +73,9 @@ public class MapperInvocationHandler implements InvocationHandler {
         // 创建返回结果结合
         List<Object> list = Collections.synchronizedList(new ArrayList<>());
         // 获取返回的结果集合中对象的类型
-        ParameterizedType parameterizedType = (ParameterizedType) method.getAnnotatedReturnType();
+        // Type type = method.getAnnotatedReturnType().getType();
+        ParameterizedType parameterizedType = (ParameterizedType) method.getAnnotatedReturnType().getType();
         Type type = parameterizedType.getActualTypeArguments()[0];
-
         // 获取对象类型clazz
         Class<?> clazz = Class.forName(type.getTypeName());
         // 获取sls client
@@ -89,7 +93,21 @@ public class MapperInvocationHandler implements InvocationHandler {
                 String fieldName = field.getName();
                 Object fieldValue = content.get(fieldName);
                 field.setAccessible(true);
-                field.set(record, fieldValue);
+                if (field.getType() == String.class) {
+                    field.set(record, fieldValue);
+                }
+                //
+                else if (field.getType() == Integer.class) {
+                    field.set(record, Integer.parseInt(fieldValue.toString()));
+                }
+
+                else if (field.getType() == Long.class) {
+                    field.set(record, Long.parseLong(fieldValue.toString()));
+                }
+                // TODO 省略... 待完善
+                else {
+                    field.set(record, fieldValue);
+                }
             }
             list.add(record);
         }

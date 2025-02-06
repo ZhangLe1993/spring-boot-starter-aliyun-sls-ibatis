@@ -1,0 +1,4 @@
+# 自动配置类列表
+com.biubiu.AliyunSlsInitiator
+com.biubiu.sls.Configration
+com.biubiu.SpringContextUtil
